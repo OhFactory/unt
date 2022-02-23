@@ -1,0 +1,266 @@
+
+ public class OOO_Attack{
+
+[SerializeField]
+private List<Motion> motion;
+private int Switch;
+
+[Header("Animator")]
+[SerializeFIeld]
+private Animator Me;
+private Motion NowMotion;
+
+[Header("Move")]
+private List<Vector3> NowMovesVectors;
+private List<float> NowMoveTimes;
+private Vector3 NowMoveVector;
+private int NowMoveNum;
+private float NowMoveTimer;
+
+
+[Header("Move_Parameter")]
+[SerializeField]
+private bool BlockEnd;
+[SerializeField]
+private bool BlockCancel;
+[SerializeField]
+private bool NoFloorEnd;
+[SerializeField]
+private bool EqualSpeed;//inertia
+
+
+private int tempI;
+void Update()
+{
+
+}
+
+private void MoveFunc{
+	if(NowMoveTimer>0){
+		NowMoveTimer-=Time.deltaTime;
+		if(NowMoveTimer<=0){
+			if(NextMove()){
+
+			}
+			else{
+				ChangeMotion(NowMotion.GetNextMotion());
+			}
+		}
+		tempI=CheckFront();
+		if(tempI==1){
+
+			if(BlockEnd){
+				ChangeMotion(NowMotion.GetNextMotion());
+			}
+			if(BlockCancel){
+				CancelMotion();
+				return;
+			}
+		}//Blocked
+		else if(tempI==0){
+			transform.translate(NowMoveVector,Space.Self);
+		}//NoBlock
+		else if(tempI==2){
+			CancelMotion();
+		}//noFloor
+	}
+}
+private bool NextMove(){
+	NowMoveNum++;
+	if(NowMoveNum>=NowMoves.Count)return false;
+	NowMoveTimer=MoveTimes[NowMoveNum];
+	NowMoveVector=NowMoveVectors[NowMoveNum];
+	return true;
+}
+
+private void SetMove(string MoveName){
+	Move temp = FindMove(MoveName);
+	NowMoveVector=temp.MotionMoves;
+	NowMoveTimes=temp.MotionTimes;
+	NowMoveNum=0;
+	NowMoveTimer=NowMoveTimes[0];
+	NowMoveVector=NowMoveVectors[0];
+}	
+[ClientRpc]
+private void RpcSetMove(string MoveName){
+if(isLocalplayer)return;
+if(isServer)return;
+SetMove(MoveName);
+}
+
+
+//-----------------------------
+//-----------------------------
+//-----------------------------
+
+public void CancelMotion()
+{
+	Me.Setbool(NowMotion.info.MotionName,false);
+
+	if(EqualSpeed){
+		GetComponent<RigidBody>().Velocity=transform.rotation*NowMotion.EndSpeed;
+	}
+	
+
+	NowMotion=null;
+}	
+
+public void ChangeMotion(Motion m)
+{
+	if(m==null)return;
+	NowMotion=m;
+	Me.SetBool(NowMotion.info.MotionName,false);
+	Me.SetBool(MotionName,true);
+	
+	
+	if(isLocalPlayer){
+		if(isServer)RpcChangeMotion(MotionName);
+		else CmdChangeMotion(MotionName);
+	}
+}
+
+public void ChangeMotion(string MotionName){
+	Motion m=FindMotion(MotionName);
+	if(m==null)return;
+	Me.SetBool(nowMotion.info.MotionName,false);
+	Me.SetBool(MotionName,true);
+	
+	if(isLocalPlayer){
+		if(isServer)RpcChangeMotion(MotionName);
+		else CmdChangeMotion(MotionName);
+	}
+}
+[Command]
+private void CmdChangeMotion(MotionName)
+{
+	Play(MotionName);
+}
+[ClientRPC]
+private void RpcChangeMotion(string MotionName)
+{
+	if(isServer)return;
+	if(isLocalPlayer)return;
+	Play(MotionName);
+}
+
+public void InputMotion(string Vertical,float FrontAngle,bool Dash=false,bool Jump=false){
+	string MotionName;	
+
+	
+	Switch(FrontAngle){
+	Case <30:
+		MotionName="Low";
+		break;
+	Case<55:
+		MotionName="Middle";
+		break;
+	default:
+		MotionName="High";
+	}
+	
+	if(Dash)MotionName+="Dash";
+	if(Jump)MotionName+="Jump";
+	
+	if(NowMotion==null) 
+	{
+		NowMotion=FindMotion(MotionName);
+	}
+	else{
+		NowMotion=NowMotion.GetNextMotion(MotionName);
+	}	
+
+	if(NowMotion==null){
+		
+	}
+	else{
+		ChangeMotion(NowMotion);
+	}
+}
+
+public Motion FindMotion(string MotionName)
+{
+	for(int i=motion.Count;i>0;i--){
+		if(motion[i-1].Name().Equal(MotionName)) return motion[i-1];
+	}
+	else return motion[0];
+}
+
+public class Motion : MonoBehavior {
+	private MotionInner info;
+
+	[Header("Move")]
+	[SerializeField]
+	private List<Vector3> MotionMoves;
+	[SerializeField]
+	private List<float> MotionMoveTimers;
+
+	[Header("Parameter")]
+	[SerializeField]
+	private float CancelStunTime;
+	[SerializeField]
+	private Vector3 EndSpeed;
+
+	[Header("Effect")]
+	[SerializeField]
+	private DamageEffect Effect;
+
+	public string Name(){
+		return info.MotionName;
+	}
+	public void Play(){
+		EffectPlay();
+
+	}
+	public void Cancel(){
+		Effect.Cancel();
+
+	}
+	public void EffectPlay()
+	{
+		Effect.Play();
+	}
+
+	public Motion GetNextMotion(string inputtype="Low"){
+		if(info.CheckInputType(inputtype))return null;
+		return info.NextMotion(inputtype);
+	}
+}
+[System.Serializable]
+public class MotionInner{
+	[Serializable]
+	private string MotionName{get;}
+	[Serializable]
+	private float MotionTime{get;}
+	[Serializable]
+	private List<string> InputType;//Key	Input type for InputTypeNum
+	[Serializable]
+	private List<int> InputTypeNum;//Pair  the number of Motion   Low Middle High 
+	[Serializable]
+	private List<Motion> NextMotions;//low middle high
+
+	public bool CheckInputType(string input){
+		if(InputType.Contain(input)) return false;
+		return true;
+	}
+	public Motion NextMotion(string Input){
+		if(NextMotions.isEmpty) return null;
+		return NextMotions[InputTypeNum[InputType.Search(Input)]];
+	}
+}
+
+private int LayerBlock=1<<24|1<<28;// block bound
+private int LayerPlayer=1<<31|1<<30|1<<29;//player shield hitbox;
+/*private bool CheckFront(Vector3 Position,Vector3 Direction, Vector3 Size,Quaternion Orient,int layer){
+	if(Physics.BoxCast(Position,Direction,Size,Orient,Direction.sqrtMagnitute,layer)) return true;
+	return false;
+}*/
+private int CheckFront(){
+	if(NoFloorEnd){
+		if(Physics.BoxCast(transform.position+transform.up*0.1f,-transform.up,GetComponent<Chara>().Size,transform.rotation,5,LayerBlock)) return 2;
+	}
+	if(Physics.BoxCast(transform.position,nowMoveVector,GetComponent<Chara>().Size,transform.rotation,Vector3sqrMagnitude(NowMoveVector3),LayerBlock)) return 1;
+
+	return 0;
+}//true = End
+
+}
