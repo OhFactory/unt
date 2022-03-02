@@ -3,12 +3,14 @@
 
 [SerializeField]
 private List<Motion> motion;
-private int Switch;
 
 [Header("Animator")]
 [SerializeFIeld]
 private Animator Me;
+
+[Header("Motion")]
 private Motion NowMotion;
+private float MotionTimer
 
 [Header("Move")]
 private List<Vector3> NowMovesVectors;
@@ -32,19 +34,16 @@ private bool EqualSpeed;//inertia
 private int tempI;
 void Update()
 {
-
+	MotionFunc();
+	MoveFunc();
 }
 
-private void MoveFunc{
+private void MoveFunc(){
 	if(NowMoveTimer>0){
 		NowMoveTimer-=Time.deltaTime;
 		if(NowMoveTimer<=0){
-			if(NextMove()){
-
-			}
-			else{
-				ChangeMotion(NowMotion.GetNextMotion());
-			}
+			NextMove();
+			return;
 		}
 		tempI=CheckFront();
 		if(tempI==1){
@@ -80,6 +79,8 @@ private void SetMove(string MoveName){
 	NowMoveNum=0;
 	NowMoveTimer=NowMoveTimes[0];
 	NowMoveVector=NowMoveVectors[0];
+	
+	if(isServer)RpcSetMove(MoveName);
 }	
 [ClientRpc]
 private void RpcSetMove(string MoveName){
@@ -93,7 +94,11 @@ SetMove(MoveName);
 //-----------------------------
 //-----------------------------
 
-public void CancelMotion()
+private void MotionFunc(){
+
+}
+
+private void CancelMotion()
 {
 	Me.Setbool(NowMotion.info.MotionName,false);
 
@@ -105,7 +110,7 @@ public void CancelMotion()
 	NowMotion=null;
 }	
 
-public void ChangeMotion(Motion m)
+private void ChangeMotion(Motion m)
 {
 	if(m==null)return;
 	NowMotion=m;
@@ -119,7 +124,7 @@ public void ChangeMotion(Motion m)
 	}
 }
 
-public void ChangeMotion(string MotionName){
+private void ChangeMotion(string MotionName){
 	Motion m=FindMotion(MotionName);
 	if(m==null)return;
 	Me.SetBool(nowMotion.info.MotionName,false);
