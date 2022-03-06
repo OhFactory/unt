@@ -94,8 +94,16 @@ SetMove(MoveName);
 //-----------------------------
 
 private bool MotionFunc(){
-	if(NowMotion==null)return true;
-	
+	if(NowMotion==null){
+		enable=false;
+		return true;
+	}
+	else{
+		if(NowMotionTimer>0){
+		
+		}
+	}
+	return false;
 }
 
 private void CancelMotion()
@@ -172,14 +180,8 @@ public void InputMotion(string Vertical,float FrontAngle,bool Dash=false,bool Ju
 	}
 	else{
 		NowMotion=NowMotion.GetNextMotion(MotionName);
-	}	
-
-	if(NowMotion==null){
-		
 	}
-	else{
-		ChangeMotion(NowMotion);
-	}
+	ChangeMotion(NowMotion);
 }
 
 public Motion FindMotion(string MotionName)
