@@ -1,5 +1,3 @@
-
- aa
  public class OOO_Attack{
 
 [SerializeField]
@@ -11,7 +9,7 @@ private Animator Me;
 
 [Header("Motion")]
 private Motion NowMotion;
-private float MotionTimer
+private float MotionTimer;
 
 [Header("Move")]
 private List<Vector3> NowMovesVectors;
@@ -35,7 +33,7 @@ private bool EqualSpeed;//inertia
 private int tempI;
 void Update()
 {
-	MotionFunc();
+	if(MotionFunc())return;
 	MoveFunc();
 }
 
@@ -95,8 +93,9 @@ SetMove(MoveName);
 //-----------------------------
 //-----------------------------
 
-private void MotionFunc(){
-
+private bool MotionFunc(){
+	if(NowMotion==null)return true;
+	
 }
 
 private void CancelMotion()
@@ -114,7 +113,7 @@ private void CancelMotion()
 private void ChangeMotion(Motion m)
 {
 	if(m==null)return;
-	NowMotion=m;
+	NowMotion=m; 
 	Me.SetBool(NowMotion.info.MotionName,false);
 	Me.SetBool(MotionName,true);
 	
