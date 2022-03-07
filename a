@@ -31,8 +31,18 @@ private bool EqualSpeed;//inertia
 
 
 private int tempI;
+
+void Awake(){
+	if(EventManager.EM.multiplayer){
+		if(!isLocalPlayer) enabled=false;
+	}
+}
 void Update()
 {
+	if(KeyManager.KM.CheckKey("Attack")){
+	
+	}
+	
 	if(MotionFunc())return;
 	MoveFunc();
 }
@@ -95,12 +105,19 @@ SetMove(MoveName);
 
 private bool MotionFunc(){
 	if(NowMotion==null){
-		enable=false;
 		return true;
 	}
 	else{
 		if(NowMotionTimer>0){
-		
+			NowMotionTimer-=Time.deltaTime;
+			if(NowMotionTimer<=0){
+				Motion tempM=NowMotion.GetNextMotion();
+				if(tempM==null){}
+				else{
+					ChangeMotion(tempM);
+				}
+				return true;
+			}
 		}
 	}
 	return false;
@@ -229,6 +246,14 @@ public class Motion : MonoBehavior {
 
 	public Motion GetNextMotion(string inputtype="Low"){
 		if(info.CheckInputType(inputtype))return null;
+		return info.NextMotion(inputtype);
+	}
+	
+	public Motion Next(string inputtype="Low"){
+		if(inputtype.equal(""){
+		return null;
+	}
+if(info.CheckInputType(inputtype))return null;
 		return info.NextMotion(inputtype);
 	}
 }
