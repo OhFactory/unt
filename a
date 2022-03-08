@@ -122,7 +122,7 @@ private bool MotionFunc(){
 	}
 	return false;
 }
-
+ㅏ
 private void CancelMotion()
 {
 	Me.Setbool(NowMotion.info.MotionName,false);
