@@ -1,0 +1,123 @@
+public class O_Effect{
+
+
+[Header("Origin")]
+private Vector3 Ori_Sclae;
+
+
+[Header("Transform")]
+ private Vector3 RotationV;
+private Vector3  MoveV;
+private Vector3 SclaleV;
+
+private float EndTimer;
+private float nowTimer;
+
+[Header("Switch")]
+private bool Rotating;
+private bool Moving;
+private bool Scaling;
+private bool Emmiting;
+
+private bool Autoadestroy;
+
+[Header("Texture")]
+private Texture2d mainTex;
+private int TexSize_X;
+private int TexSize_Y;
+private float Tex_Shift_Speed;
+
+void Awake(){
+if(Emmiting)
+Getcomponent<MeshRenderer>().material.SetBool("shader_emmit",true);
+}
+
+
+void Enabled(){
+ResetEffect();
+}
+
+void update(){
+ 
+ if (moving)
+transform.translate(MoveV*Time.deltaTime,Space.Self);
+if(Rotating) transform.Rotate(RotateV*Time.deltaTime);
+if(Scaling)transform.localScale=transform.localScale*ScaleV*Time.deltaTime;
+}
+
+NowTimer-=Time.deltaTime;
+if(NowTimer<=0){
+EffectEnd();
+}
+}
+
+private void EffectEnd(){
+if(AutoDestroy) {'
+if(IsClient){
+gameobject.Active(false);
+}
+else{
+ Destroy(gameobject);
+}
+else{
+PrivatePool.pool.ReturnObject(gameobject);
+gameObject.Active(false);
+}
+}
+
+
+private void ResetEffect(){
+
+transform.localScale=Ori_Scale;
+if(IsServer) RpcResetEffect();
+}
+[ClientRpc]
+private void RpcReserEffect(){
+
+if(IsServer) return;
+transform.localscale=Ori_Scale;
+}
+
+public void Play(Vector3 position,Quaternion rotation){
+  if(isServer){
+RpcPlay(position,rotation);
+}
+transform.localposition=position;
+teansform.rotaton=rotation;
+
+
+
+}
+[ClientRpc]
+private void RpcPlay(Vector3 transform,Quaternion rotation){
+if(IsServer)return;
+Play(position,rotation);
+}
+
+[Command]
+private void CmdPlay(Vector3 position,Quaternion rotation){
+Play(positoon,rotation);
+
+
+
+
+//-------------------------------------------------------Texture
+//-------------------------------------------------------Texture
+//-------------------------------------------------------Texture
+//-------------------------------------------------------Texture
+[SerializedField]
+private int Ori_Cut_X;
+[SerializedField]
+private int Ori_Cut_Y;
+
+private void SetTexture(int startcut=0){
+if(startcut>0){
+GetComponent<MeshRenderer>().Material.SetVector("",);
+}
+}
+
+
+
+
+
+}
