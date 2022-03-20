@@ -1,4 +1,4 @@
-a
+
 public class O_Effect{
 
 
@@ -7,26 +7,40 @@ private Vector3 Ori_Sclae;
 
 
 [Header("Transform")]
+[SerializeField]
  private Vector3 RotationV;
+[SerializeField]
 private Vector3  MoveV;
+[SerializeField]
 private Vector3 SclaleV;
 
+[SerializeField]
 private float EndTimer;
 private float nowTimer;
 
 [Header("Switch")]
+[SerializeField]
 private bool Rotating;
+[SerializeField]
 private bool Moving;
+[SerializeField]
 private bool Scaling;
+[SerializeField]
 private bool Emmiting;
 
+[SerializeField]
 private bool Autoadestroy;
 
 [Header("Texture")]
+[SerializeField]
 private Texture2d mainTex;
+[SerializeField]
 private int TexSize_X;
+[SerializeField]
 private int TexSize_Y;
+[SerializeField]
 private float Tex_Shift_Speed;
+private int NowCut;
 
 void Awake(){
 if(Emmiting)
@@ -73,7 +87,7 @@ transform.localScale=Ori_Scale;
 if(IsServer) RpcResetEffect();
 }
 [ClientRpc]
-private void RpcReserEffect(){
+private void RpcResetEffect(){
 
 if(IsServer) return;
 transform.localscale=Ori_Scale;
@@ -85,22 +99,26 @@ RpcPlay(position,rotation);
 }
 transform.localposition=position;
 teansform.rotaton=rotation;
-
+gameobject.SetActive(true);
 
 
 }
+
 [ClientRpc]
 private void RpcPlay(Vector3 transform,Quaternion rotation){
 if(IsServer)return;
 Play(position,rotation);
+gameobject.SetActive(true);
 }
 
 [Command]
 private void CmdPlay(Vector3 position,Quaternion rotation){
 Play(positoon,rotation);
+}
 
+public void Set(){
 
-
+}
 
 //-------------------------------------------------------Texture
 //-------------------------------------------------------Texture
