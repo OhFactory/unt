@@ -1,0 +1,19 @@
+public class Robot{
+
+private Vector3 TargetPosition;
+private Vector3 TargetAngle;//Foward
+
+
+[SerializeField]
+private Transform Bone_Horizon1;
+[SerializeField]
+private Transform Bone_Horizon2;
+[SerializeField]
+private Transform Bone_Vertical1;
+[SerializeField]
+private Transform Bone_Vertical2;
+[SerializeField]
+private Transform Bone_Hand;
+
+
+}
