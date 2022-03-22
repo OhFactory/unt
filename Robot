@@ -1,8 +1,11 @@
 public class Robot{
 
 private Vector3 TargetPosition;
-private Vector3 TargetAngle;//Foward
+//private Vector3 TargetAngle;//Foward
+private float Distance;
 
+[SerializeField]
+private Transform Target;
 
 [SerializeField]
 private Transform Bone_Horizon1;
@@ -15,5 +18,10 @@ private Transform Bone_Vertical2;
 [SerializeField]
 private Transform Bone_Hand;
 
+
+void Update(){
+  TargetPosition=Target.position+Target.rotation.EulerAngle.nomalized*Distance;
+
+}
 
 }
