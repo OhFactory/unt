@@ -24,4 +24,17 @@ void Update(){
 
 }
 
+private void VerticalAngle(){
+  
+}
+private void HorizonAnle(){
+
+}
+private void RotateVertical(){
+
+}
+private void RotateHorizon(){
+
+}
+
 }
