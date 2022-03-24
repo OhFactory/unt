@@ -6,6 +6,8 @@ private float Distance;
 
 [SerializeField]
 private Transform Target;
+[SerializeField]
+private Transform Hand;
 
 [SerializeField]
 private Parts[] Vertical_;
@@ -16,7 +18,9 @@ private Transform Bone_Hand;
 
 
 void Update(){
+  if(Vector3.Distance(TargetPosition-Hand)<0.1f) return;
   
+  Calc();
 
 }
 
@@ -33,29 +37,32 @@ Vector3 Position;
   return Position;
 }
 
-private Vector3 NowAngle(){
-  Vector3 Angle;
-  for(int i=0;i<Vertical_.Length;i++){
-    Angle.y+=Vertical[i].Angle;
-  }
-  for(int i=0;i<Horizontal_.Length;i++){
-    Angle.x+=Horizontal[i].Angle;
-  }
-
-  return Angle;
-}
 private void Calc(){
-TargetPosition=Target.position+Target.rotation.EulerAngle.nomalized*Distance;
+TargetPosition=Target.position+Target.forward*Distance;
+Vector3 LocalTargetPosition=TargetPosition-transform.position;
+Vector3 LocalHandPosition= Hand.position-transform.position;
+
+if(LocalTargetPosition.Magnitude>LocalHandPosition.Magnitude){
+  
+}//target is more far from origin
+else{
+
+}
+
 
 Vector3 TempV=TargetPosition-Position;
-  if(Math.Abs(TempV.x)>Math.Abs(tempV.y))VerticalFunc();
+  if(Math.Abs(TempV.x)>Math.Abs(tempV.y))VerticalFunc(tempV);
   else HorizontalFunc();
-  
 }
-private Vector3 VerticalFunc(){
-  
+
+private Vector3 VerticalFunc(Vector3 PositionDiffer)
+{
+  bool SW;
+  for(int i=0;i<Vertical_.Length;i++){
+    if(Vertical[i].Rotate
+  }
 }
-private void HorizonFunc(){
+private void HorizonFunc(Vector3 PositionDiffer){
 
 }
 
