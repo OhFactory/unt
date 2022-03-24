@@ -10,6 +10,8 @@ private Transform Target;
 private Transform Hand;
 
 [SerializeField]
+private Parts[] Partss;
+[SerializeField]
 private Parts[] Vertical_;
 [SerializeField]
 private Parts[] Horizontal_;
@@ -24,7 +26,7 @@ void Update(){
 
 }
 
-private Vector3 NowPosition(){
+private Vector3 NowHandPosition(){
 Vector3 Position;
 
   for(int i=0;i<Vertical_.Length;i++){
@@ -40,10 +42,9 @@ Vector3 Position;
 private void Calc(){
 TargetPosition=Target.position+Target.forward*Distance;
 Vector3 LocalTargetPosition=TargetPosition-transform.position;
-Vector3 LocalHandPosition= Hand.position-transform.position;
 
 if(LocalTargetPosition.Magnitude>LocalHandPosition.Magnitude){
-  
+  for(int i=0;i<Parts[i]&LocalTargetPosition
 }//target is more far from origin
 else{
 
