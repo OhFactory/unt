@@ -29,13 +29,9 @@ void Update(){
 private Vector3 NowHandPosition(){
 Vector3 Position;
 
-  for(int i=0;i<Vertical_.Length;i++){
-    Angle.y+=Vertical[i].Position();
+  for(int i=0;i<Parts.Length;i++){
+    Position+=Parts[i].position;
   }
-  for(int i=0;i<Horizontal_.Length;i++){
-    Angle.x+=Horizontal[i].Position();
-  }
-
   return Position;
 }
 
