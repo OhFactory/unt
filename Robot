@@ -1,13 +1,14 @@
 public class Robot{
 
 private Vector3 TargetPosition;
-//private Vector3 TargetAngle;//Foward
 private float Distance;
 
 [SerializeField]
 private Transform Target;
 [SerializeField]
 private Transform Hand;
+[SerializeField]
+private Vector3 LocalPositionOri_;
 
 [SerializeField]
 private Parts[] Partss;
@@ -39,11 +40,23 @@ private void Calc(){
 TargetPosition=Target.position+Target.forward*Distance;
 Vector3 LocalTargetPosition=TargetPosition-transform.position;
 
-if(LocalTargetPosition.Magnitude>LocalHandPosition.Magnitude){
-  for(int i=0;i<Parts[i]&LocalTargetPosition
+float Dist1 =LocalTargetPosition.Magnitude;
+
+if(Dist1>LocalHandPosition.Magnitude){
+  for(int i=0;Dist1>Vector3.Distance(NowHandPosition()-transform.position);){
+    if(i>=Parts.Length)return;
+    
+    Parts[i].Rotate(TargetPosition);
+    i++;
+  }
 }//target is more far from origin
 else{
-
+  for(int i=0;Dist1<Vector3.Distance(NowHandPosition()-transform.position);){
+    if(i>=Parts.Length)return;
+    
+    Parts[i].Rotate(TargetPosition);
+    i++;
+  }
 }
 
 
