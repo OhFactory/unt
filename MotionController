@@ -29,7 +29,7 @@ private bool NoFloorEnd;
 [SerializeField]
 private bool EqualSpeed;//inertia
 
-
+private bool Act;
 private int tempI;
 
 void Awake(){
@@ -42,9 +42,10 @@ void Update()
 	if(KeyManager.KM.CheckKey("Attack")){
 	
 	}
-	
-	if(MotionFunc())return;
-	MoveFunc();
+	if(Act){
+		if(MotionFunc())return;
+		MoveFunc();
+	}
 }
 
 private void MoveFunc(){
