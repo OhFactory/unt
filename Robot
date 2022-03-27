@@ -83,5 +83,9 @@ private void RotateVertical(){
 private void RotateHorizon(){
 
 }
+Parts{
 
+[SerializeField
+
+}
 }
