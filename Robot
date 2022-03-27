@@ -102,8 +102,13 @@ public Vector3 Position(){
 public bool CheckRotate(){
 }
 
-public bool Rotate(Vector3 TargetPosition){
+public bool Rotate(Vector3 TargetPosition,Vector3 NowHandPosition,float MaxDistance){
+  if(Vector3.Dot(NowHandPosition.normalized,TargetPosition-transform.position)<0){
   
+  }//target is behind
+  else{
+  
+  }//target front
 }
 
 }
