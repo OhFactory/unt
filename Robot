@@ -85,7 +85,26 @@ private void RotateHorizon(){
 }
 Parts{
 
-[SerializeField
+[SerializeField]
+private string type="Rotate";
+[SerializeField]
+private Vector3 RotateAngle;
+[SerializeField]
+private float RotateMaxAngle;
+[SerializeField]
+private float RotateSpeed;
+[SerializeField]
+private float Distance;
+
+public Vector3 Position(){
+  return transform.forward*Distance;
+}
+public bool CheckRotate(){
+}
+
+public bool Rotate(Vector3 TargetPosition){
+  
+}
 
 }
 }
