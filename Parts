@@ -1,0 +1,63 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Parts : MonoBehaviour
+{
+    [SerializeField]
+    private GameObject Target;
+    [SerializeField]
+    private Transform ParentOb;
+
+[SerializeField]
+private string type="Rotate";
+[SerializeField]
+private Vector3 RotateAngle;
+[SerializeField]
+private float RotateMaxAngle=90;
+[SerializeField]
+private float RotateSpeed;
+[SerializeField]
+private float Distance;
+
+    public Vector3 Position(){
+        return transform.forward*Distance;
+    }
+    public bool CheckRotate(){
+        return true;
+    }
+
+    public bool Rotate(Vector3 TargetPosition,Vector3 NowHandPosition,float MaxDistance){
+        NowHandPosition=NowHandPosition.normalized;
+        if(Vector3.Dot(NowHandPosition,TargetPosition-transform.position)<0){
+        if(Vector3.Cross(NowHandPosition,TargetPosition.normalized).y<0){
+            if(Rotating(Vector3.right)) return false;
+        }//target is left to back for target use reversed Rotating
+        else{
+            if(Rotating(Vector3.left)) return false;
+        }//right
+    }//target is behind
+    else{
+        if(Vector3.Cross(NowHandPosition,TargetPosition.normalized).y>0){
+            if(Rotating(Vector3.right)) return false;
+         }//target is right
+        else{
+            if(Rotating(Vector3.left)) return false;
+         }//left
+    }//target front
+        return true;
+    }//return false = fail rotate = stop rotate
+
+    private bool CheckRotate(Vector3 RotateAngle){
+        if(ParentOb.rotation*Quaternion.LookRotation(RotateAngle*RotateMaxAngle)<=transform.rotation*Quaternion.LookRotation(RotateAngle)*Time.deltaTime)return true;
+        return false;
+    }//true= rotating enable
+
+    private bool Rotating(Vector3 RotateAngle){
+        if(CheckRotate(RotateAngle)){
+            transform.rotation*=Quaternion.LookRotation(RotateAngle)*Time.deltaTime*RotateSpeed);
+            return true;
+        }
+        else return false;
+    }
+}
