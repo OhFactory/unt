@@ -1,4 +1,4 @@
-public class Robot{a
+public class Robot{
 
 private Vector3 TargetPosition;
 private float Distance;
